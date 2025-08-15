@@ -19,3 +19,7 @@ app.include_router(api_router, prefix="/api_v1")
 @app.get("/")
 def home():
     return {"message": "Welcome to School Management API"}
+
+
+# start command
+# uvicorn main:app --reload
