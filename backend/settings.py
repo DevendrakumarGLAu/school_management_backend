@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'role',
     'registration',
     'sidebar',
-    'student'
+    'student',
+    'teacher'
 ]
 
 MIDDLEWARE = [
