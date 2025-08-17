@@ -1,5 +1,4 @@
-# controller/registration_controller.py
-from datetime import timezone
+from django.utils import timezone
 from registration.models import UserAccount
 from fastapi import HTTPException
 from django.contrib.auth.hashers import make_password
@@ -15,15 +14,27 @@ class RegistrationController:
         except Role.DoesNotExist:
             raise HTTPException(status_code=404, detail="Role not found")
 
+        hashed_password = make_password(password)
+
         user = UserAccount.objects.create(
             email=email,
-            password=make_password(password),
+            password=hashed_password,
             full_name=full_name,
-            role=role,
-            created_by=created_by
+            role=role_id,
+            # created_by=created_by,
+            is_active=True
         )
-        return user
-    
+        return {
+            "id": user.id,
+            "email": user.email,
+            "full_name": user.full_name,
+            "role": user.role.name,
+            "created_at": user.created_at,
+            "updated_at": user.updated_at,
+            "is_active": user.is_active
+        }
+
+    @staticmethod
     def update_user(user_id: int, email: str = None, password: str = None,
                     full_name: str = None, role_id: int = None, updated_by: str = None):
         try:
@@ -52,4 +63,13 @@ class RegistrationController:
         user.updated_by = updated_by
         user.updated_at = timezone.now()
         user.save()
-        return user
+
+        return {
+            "id": user.id,
+            "email": user.email,
+            "full_name": user.full_name,
+            "role": user.role.name,
+            "created_at": user.created_at,
+            "updated_at": user.updated_at,
+            "is_active": user.is_active
+        }

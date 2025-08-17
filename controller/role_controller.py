@@ -1,6 +1,7 @@
-from login.models import Role
 from fastapi import HTTPException
 from django.utils import timezone
+
+from role.models import Role
 
 class RoleController:
 

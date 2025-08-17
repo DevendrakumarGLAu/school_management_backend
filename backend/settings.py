@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'core',
     'login',
     'role',
-    'registration'
+    'registration',
+    'sidebar',
+    'student'
 ]
 
 MIDDLEWARE = [

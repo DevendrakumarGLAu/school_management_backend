@@ -8,3 +8,6 @@ class LoginResponse(BaseModel):
     message: str
     user_id: int
     email: str
+    access_token: str
+    token_type: str
+    role: str

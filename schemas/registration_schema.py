@@ -8,7 +8,7 @@ class RegisterRequest(BaseModel):
     password: str
     full_name: str
     role_id: int
-    created_by: Optional[str] = None
+    created_by: Optional[int] = None
 
 class RegisterResponse(BaseModel):
     id: int
