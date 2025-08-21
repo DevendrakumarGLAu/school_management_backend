@@ -5,7 +5,6 @@ from role.models import Role
 
 class RoleController:
 
-    @staticmethod
     def create_role(name: str, description: str = None, created_by: str = None):
         if Role.objects.filter(name=name).exists():
             raise HTTPException(status_code=400, detail="Role already exists")

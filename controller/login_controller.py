@@ -12,8 +12,7 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 class LoginController:
-
-
+    @staticmethod
     def login_user(email: str, password: str):
         try:
             user = UserAccount.objects.get(email=email, is_active=True)

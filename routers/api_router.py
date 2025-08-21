@@ -17,3 +17,7 @@ api_router.include_router(sidebar_router, prefix="/sidebar", tags=["Sidebar"])
 # registration router 
 from api_v1.registration_router import registration_router
 api_router.include_router(registration_router, prefix="/register", tags=["Registration"])
+
+# gst calculation
+from api_v1.gst_tool import gst_router
+api_router.include_router(gst_router, prefix="/gst", tags=["GSTCalculation"])
