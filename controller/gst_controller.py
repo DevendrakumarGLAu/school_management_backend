@@ -1,11 +1,18 @@
 import io
 import pandas as pd
+from controller.gst_sheets.b2cl import generate_b2cl_sheet
+from controller.gst_sheets.b2cs import generate_b2cs_sheet
+from controller.gst_sheets.cdnr import generate_cdnr_sheet
+from controller.gst_sheets.hsn_b2b import generate_hsn_b2b_sheet
+from controller.gst_sheets.hsn_b2c import generate_hsn_sheet
+from controller.gst_sheets.sez_ import generate_sez_sheet
 from controller.gst_sheets.sheet_docs import generate_docs_sheet
 from controller.gst_sheets.sheet_eco import generate_eco_sheet
 from fastapi import UploadFile, HTTPException, Response
 from typing import Dict
 import openpyxl
 from openpyxl.styles import PatternFill, Font, Alignment
+from controller.gst_sheets.sheet_exemp import generate_exemp_sheet
 
 class GSTController:
 
@@ -79,9 +86,15 @@ class GSTController:
             supplier_name = 'meesho'
             Net_value_of_supplies = round(total_taxable_sale_value - total_taxable_sale_value_return, 2)
             Net_value_of_supplies = int(Net_value_of_supplies)
+            generate_hsn_sheet(wb, tcs_sales_return_df,tcs_sales_df,tax_invoice_details_df)
             generate_eco_sheet(wb, meesho_gst,supplier_name,Net_value_of_supplies)
-            generate_docs_sheet(wb, total_quantity_tcs_sales, total_quantity_tcs_sales_return)
-            
+            generate_docs_sheet(wb, tax_invoice_details_df)
+            generate_exemp_sheet(wb)
+            generate_hsn_b2b_sheet(wb)
+            generate_cdnr_sheet(wb)
+            generate_b2cs_sheet(wb)
+            generate_b2cl_sheet(wb)
+            generate_sez_sheet(wb)
 
             # Save the workbook to a BytesIO object
             file_stream = io.BytesIO()
