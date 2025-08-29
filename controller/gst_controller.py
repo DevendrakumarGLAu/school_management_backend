@@ -8,10 +8,12 @@ from controller.gst_sheets.hsn_b2c import generate_hsn_sheet
 from controller.gst_sheets.sez_ import generate_sez_sheet
 from controller.gst_sheets.sheet_docs import generate_docs_sheet
 from controller.gst_sheets.sheet_eco import generate_eco_sheet
+from controller.gst_sheets.generate_json import generate_json
 from fastapi import UploadFile, HTTPException, Response
-from typing import Dict
+from typing import Dict, Optional
 import openpyxl
 from openpyxl.styles import PatternFill, Font, Alignment
+
 from controller.gst_sheets.sheet_exemp import generate_exemp_sheet
 
 class GSTController:
@@ -20,7 +22,13 @@ class GSTController:
     async def calculate_gst(
         tcs_sales_return: UploadFile,
         tcs_sales: UploadFile,
-        tax_invoice_details: UploadFile
+        tax_invoice_details: UploadFile,
+        gstNumber: str,
+        filingFrequency: Optional[str] = None,
+        month: Optional[str] = None,
+        quarter: Optional[str] = None,
+        year: Optional[str] = None,
+        
     ) -> Dict:
 
         try:
@@ -40,8 +48,6 @@ class GSTController:
                 ).fillna(0).astype(int)  # Replace NaN with 0 and convert to integer
                 # total_quantity_tcs_sales = tcs_sales_df['quantity'].sum()
                 total_quantity_tcs_sales = tcs_sales_df['quantity'].sum()
-                
-                
             else:
                 raise HTTPException(status_code=400, detail="'quantity' column not found in tcs_sales.xlsx")
             
@@ -76,10 +82,10 @@ class GSTController:
             total_taxable_sale_value = round(tcs_sales_df['total_taxable_sale_value'].sum(),2)
             total_tax_amount =  round(tcs_sales_df['tax_amount'].sum(), 2)
             total_taxable_shipping = round(tcs_sales_df['taxable_shipping'].sum(), 2)
-            print("1",total_taxable_sale_value)
-            print("2",total_tax_amount)
-            print("3",total_taxable_shipping)
-            print("4",total_taxable_sale_value_return)
+            # print("1",total_taxable_sale_value)
+            # print("2",total_tax_amount)
+            # print("3",total_taxable_shipping)
+            # print("4",total_taxable_sale_value_return)
             
             wb = openpyxl.Workbook()
             meesho_gst = '09AARCM9332R1CM'
@@ -92,9 +98,11 @@ class GSTController:
             generate_exemp_sheet(wb)
             generate_hsn_b2b_sheet(wb)
             generate_cdnr_sheet(wb)
-            generate_b2cs_sheet(wb)
+            generate_b2cs_sheet(wb,tcs_sales_return_df,tcs_sales_df,tax_invoice_details_df,gstNumber)
             generate_b2cl_sheet(wb)
             generate_sez_sheet(wb)
+            fp= ''
+            generate_json(tcs_sales_df, tcs_sales_return_df, tax_invoice_details_df, gstNumber, fp, version="GST3.1.6")
 
             # Save the workbook to a BytesIO object
             file_stream = io.BytesIO()
