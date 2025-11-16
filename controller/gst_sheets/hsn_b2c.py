@@ -89,7 +89,6 @@ def generate_hsn_sheet(wb, tcs_sales_return_df, tcs_sales_df, tax_invoice_detail
     hsn_grouped['net_invoice'] = hsn_grouped['net_invoice'].round(2)
 
     # ========== EXCEL SHEET SETUP ==========
-
     # Row 1 - Title and Help
     ws['A1'] = "Summary For HSN(12)"
     ws['A1'].fill = blue_fill

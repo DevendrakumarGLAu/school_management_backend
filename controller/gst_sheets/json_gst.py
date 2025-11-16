@@ -18,6 +18,9 @@ merged['rt'] = merged['gst_rate']
 # Create hsn_b2c list
 hsn_b2c = []
 for idx, row in merged.iterrows():
+    camt = round(row['txval'] * row['rt'] / 200, 2)  # CGST
+    samt = round(row['txval'] * row['rt'] / 200, 2)  # SGST
+    iamt = 0
     hsn_b2c.append({
         "num": idx + 1,
         "hsn_sc": row['hsn_code'],
